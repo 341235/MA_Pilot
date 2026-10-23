@@ -1,0 +1,78 @@
+[pilot]
+start = "2024-01-15T00:00:00Z"
+end = "2024-01-17T00:00:00Z" # exclusive; development sample, never final holdout
+warmup_hours = 24
+decision_seconds = 3600
+holding_seconds = 3600
+capital_usdc = 10000
+widths = [0.005, 0.01, 0.02]
+synthetic_seed = 20240115
+
+[pool]
+chain_id = 1
+address = "0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640"
+token0 = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+token1 = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+decimals0 = 6
+decimals1 = 18
+fee_pips = 500
+tick_spacing = 10
+
+[timing]
+# Assumed reception, not observed historical wall-clock arrival times.
+block_delay_seconds = 12
+reference_delay_seconds = 1
+execution_delay_seconds = 12
+max_price_age_seconds = 120
+max_pool_age_seconds = 120
+benchmark_seconds = 60
+markout_seconds = 300
+lookback_seconds = 3600
+
+[costs]
+# Illustrative sensitivity only. Missing empirical costs keep primary Y null.
+mode = "sensitivity"
+mint_gas = 250000
+burn_gas = 150000
+collect_gas = 100000
+gas_price_gwei = 30
+token_conversion_bps = 5
+
+[data]
+source = "rpc"
+events_path = "data/input/rpc/events.parquet"
+export_manifest_path = "data/input/rpc/export_manifest.json"
+snapshot_path = "data/input/rpc/snapshot.json"
+checkpoints_path = "data/input/rpc/checkpoints.json"
+receipts_path = "data/input/rpc/receipts.json"
+reference_dir = "data/cache/binance"
+output_dir = "data/runs"
+
+[network]
+timeout_seconds = 10
+max_requests = 20
+max_download_bytes = 25000000
+cache_dir = "data/cache/rpc"
+
+[acquisition]
+# Hard per-invocation ceilings, not a promise about the account's tariff/quota.
+max_requests = 40000
+max_download_bytes = 500000000
+max_compute_units = 1500000
+cu_per_second = 250
+chunk_blocks = 10
+batch_size = 10
+max_initialized_ticks = 5000
+max_receipts = 100
+smoke_seconds = 600
+checkpoint_count = 4
+
+[validation]
+integer_tolerance = 0
+reference_relative_tolerance = 0.000000000001
+small_lp_max_share = 0.01
+critical_checks = ["pool_identity", "coverage", "initialization", "reconstruction", "position_fees", "temporal_availability", "costs", "outcomes"]
+
+[feature_validation]
+day = "2024-01-15"
+alternate_block_delay_seconds = 60
